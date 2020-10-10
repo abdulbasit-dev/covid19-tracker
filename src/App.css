@@ -3,6 +3,16 @@
   margin: 0;
 }
 
+.app {
+  display: flex;
+  padding: 20px;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.app__left {
+  flex: 0.9;
+}
 body {
   background-color: #f5f6fa;
 }
@@ -22,4 +32,10 @@ body {
 
 .infoBox__cases {
   font-weight: 500;
+}
+
+@media (max-width: 992px) {
+  .app {
+    flex-direction: column;
+  }
 }
