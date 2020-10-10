@@ -9,7 +9,7 @@ body {
 
 .app__header {
   display: flex;
-  padding: 20px;
+
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
@@ -18,10 +18,8 @@ body {
 .app__stats {
   display: flex;
   justify-content: space-between;
-  padding: 20px;
 }
 
 .infoBox__cases {
   font-weight: 500;
-  margin: 5px 0;
 }
