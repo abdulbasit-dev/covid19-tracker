@@ -4,13 +4,20 @@ import './App.css'
 import InfoBox from './components/InfoBox'
 import Map from './components/Map'
 import Table from './components/Table'
-import {sortDate} from './utill'
+import {sortDate} from './util'
+import LineGraph from './components/LineGraph'
 
 function App() {
+  //fill drob down wit the all country
   const [countries, setCountries] = useState([])
+  //select single country
   const [country, setCountry] = useState('worldwide')
   const [countryInfo, setCountryInfo] = useState({})
   const [tableData, setTableData] = useState([])
+  const [casesType, setCasesType] = useState('cases')
+  const [mapzomm, setMapzomm] = useState(3)
+  const [mapCenter, setMapCenter] = useState({lat: 34.80746, lng: -40.4796})
+  const [mapCountries, setMapCountries] = useState([])
 
   //get alll country data
   useEffect(() => {
@@ -24,6 +31,7 @@ function App() {
           }))
           setCountries(countries)
           setTableData(sortDate(data))
+          setMapCountries(data)
         })
     }
     getCountriesDate()
@@ -50,9 +58,15 @@ function App() {
 
     await fetch(url)
       .then(resp => resp.json())
-      .then(result => {
+      .then(data => {
         setCountry(counrtyCode)
-        setCountryInfo(result)
+        setCountryInfo(data)
+        if (counrtyCode === 'worldwide') {
+          setMapCenter({lat: 34.80746, lng: -40.4796})
+          setMapzomm(3)
+        }
+        setMapCenter([data.countryInfo.lat, data.countryInfo.long])
+        setMapzomm(4)
       })
   }
 
@@ -75,28 +89,43 @@ function App() {
 
         <div className='app__stats'>
           <InfoBox
+            isRed
+            active={casesType === 'cases'}
+            handleClick={e => setCasesType('cases')}
             cases={countryInfo.todayCases}
             total={countryInfo.cases}
             title='Coronavirus Cases'
           />
           <InfoBox
+            active={casesType === 'recovered'}
+            handleClick={e => setCasesType('recovered')}
             cases={countryInfo.todayRecovered}
             total={countryInfo.recovered}
             title='Recovered'
           />
-          <InfoBox cases={countryInfo?.todayDeaths} total={countryInfo.deaths} title='Deaths' />
+          <InfoBox
+            isRed
+            active={casesType === 'deaths'}
+            handleClick={e => setCasesType('deaths')}
+            cases={countryInfo.todayDeaths}
+            total={countryInfo.deaths}
+            title='Deaths'
+          />
         </div>
 
-        {countryInfo && <img src={countryInfo?.countryInfo?.flag} alt='' />}
+        {/* {countryInfo && <img src={countryInfo?.countryInfo?.flag} alt='' />} */}
 
-        <Map />
+        <Map center={mapCenter} zoom={mapzomm} countries={mapCountries} casesType={casesType} />
       </div>
       <Card className='app__right'>
         <CardContent>
           <h3>Live cases by Country</h3>
           <Table countries={tableData} />
-          <h3>Worldwide new cases</h3>
+          <h3 className='app__graphTitle'>
+            Worldwide new <span className='app__casesType'>{casesType}</span>
+          </h3>
           {/* graph  */}
+          <LineGraph caseType={casesType} />
         </CardContent>
       </Card>
     </div>
