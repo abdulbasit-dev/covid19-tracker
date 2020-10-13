@@ -64,9 +64,10 @@ function App() {
         if (counrtyCode === 'worldwide') {
           setMapCenter({lat: 34.80746, lng: -40.4796})
           setMapzomm(3)
+        } else {
+          setMapCenter({lat: data.countryInfo.lat, lng: data.countryInfo.long})
+          setMapzomm(3)
         }
-        setMapCenter([data.countryInfo.lat, data.countryInfo.long])
-        setMapzomm(4)
       })
   }
 
@@ -112,11 +113,9 @@ function App() {
             title='Deaths'
           />
         </div>
-
-        {/* {countryInfo && <img src={countryInfo?.countryInfo?.flag} alt='' />} */}
-
         <Map center={mapCenter} zoom={mapzomm} countries={mapCountries} casesType={casesType} />
       </div>
+
       <Card className='app__right'>
         <CardContent>
           <h3>Live cases by Country</h3>
